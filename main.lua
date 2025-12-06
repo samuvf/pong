@@ -21,6 +21,8 @@ function love.load()
   font = love.graphics.newFont('font.ttf', 16) -- better font for 2d game
   love.graphics.setFont(font)
 
+  math.randomseed(os.time())
+
   -- set virtual window for better and consistant resolution whatever the window size is
   push:setupScreen( VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
     fullscreen = false,
@@ -37,29 +39,38 @@ function love.load()
 
   ball = Ball(VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 + 2, 4, 4)
 
+  ball.dx = math.random(2) == 1 and -100 or 100
+  ball.dy = math.random(2) == 1 and math.random(-80, -100) or math.random(80, 100)
+
   gameState = 'start'
 end
 
 function love.update(dt) 
-  -- player 1
-  if love.keyboard.isDown('w') then
-    player1paddle.dy = -PADDLE_SPEED
-  elseif love.keyboard.isDown('s') then
-    player1paddle.dy = PADDLE_SPEED 
-  else
-    player1paddle.dy = 0 -- if no keyboard pressed paddle stays in its place
-  end
-  -- player 2
-  if love.keyboard.isDown('up') then
-    player2paddle.dy = -PADDLE_SPEED 
-  elseif love.keyboard.isDown('down') then
-    player2paddle.dy = PADDLE_SPEED 
-  else
-    player2paddle.dy = 0 -- if no keyboard pressed paddle stays in its place
-  end
+  if gameState == 'play' then
+    -- player 1
+    if love.keyboard.isDown('w') then
+      player1paddle.dy = -PADDLE_SPEED
+    elseif love.keyboard.isDown('s') then
+      player1paddle.dy = PADDLE_SPEED 
+    else
+      player1paddle.dy = 0 -- if no keyboard pressed paddle stays in its place
+    end
+    -- player 2
+    if love.keyboard.isDown('up') then
+      player2paddle.dy = -PADDLE_SPEED 
+    elseif love.keyboard.isDown('down') then
+      player2paddle.dy = PADDLE_SPEED 
+    else
+      player2paddle.dy = 0 -- if no keyboard pressed paddle stays in its place
+    end
 
-  player1paddle:update(dt)
-  player2paddle:update(dt)    
+    player1paddle:update(dt)
+    player2paddle:update(dt)    
+
+    ball:update(dt)
+  else
+    ball:reset()
+  end
 end
 
 function love.keypressed(key)
