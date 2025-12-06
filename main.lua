@@ -46,30 +46,28 @@ function love.load()
 end
 
 function love.update(dt) 
-  if gameState == 'play' then
-    -- player 1
-    if love.keyboard.isDown('w') then
-      player1paddle.dy = -PADDLE_SPEED
-    elseif love.keyboard.isDown('s') then
-      player1paddle.dy = PADDLE_SPEED 
-    else
-      player1paddle.dy = 0 -- if no keyboard pressed paddle stays in its place
-    end
-    -- player 2
-    if love.keyboard.isDown('up') then
-      player2paddle.dy = -PADDLE_SPEED 
-    elseif love.keyboard.isDown('down') then
-      player2paddle.dy = PADDLE_SPEED 
-    else
-      player2paddle.dy = 0 -- if no keyboard pressed paddle stays in its place
-    end
-
-    player1paddle:update(dt)
-    player2paddle:update(dt)    
-
-    ball:update(dt)
+  -- player 1
+  if love.keyboard.isDown('w') then
+    player1paddle.dy = -PADDLE_SPEED
+  elseif love.keyboard.isDown('s') then
+    player1paddle.dy = PADDLE_SPEED 
   else
-    ball:reset()
+    player1paddle.dy = 0 -- if no keyboard pressed paddle stays in its place
+  end
+  -- player 2
+  if love.keyboard.isDown('up') then
+    player2paddle.dy = -PADDLE_SPEED 
+  elseif love.keyboard.isDown('down') then
+    player2paddle.dy = PADDLE_SPEED 
+  else
+    player2paddle.dy = 0 -- if no keyboard pressed paddle stays in its place
+  end
+
+  player1paddle:update(dt)
+  player2paddle:update(dt)
+
+  if gameState == 'play' then
+    ball:update(dt)   
   end
 end
 
@@ -81,6 +79,8 @@ function love.keypressed(key)
       gameState = 'play'
     else
       gameState = 'start'
+
+      ball:reset()
     end
   end
 end

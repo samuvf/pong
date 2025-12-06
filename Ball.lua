@@ -4,14 +4,18 @@ function Ball:init(x, y, width, height)
   self.x = x
   self.y = y
   self.width = width
-  self.height  = height
+  self.height = height
   self.dx = 0
   self.dy = 0
 end
 
 function Ball:update(dt)
-  self.x = self.x + self.dx * dt
+  self.x = self.x + self.dx * dt * 1.03
   self.y = self.y + self.dy * dt
+  -- collision with top and botton 
+  if self.y <= self.height or self.y >= VIRTUAL_HEIGHT - self.height then 
+    self.dy = -self.dy -- change direction
+  end
 end
 
 function Ball:render()
