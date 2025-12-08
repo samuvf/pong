@@ -46,6 +46,16 @@ function love.load()
 end
 
 function love.update(dt) 
+  if ball:collision(player1paddle) then
+    ball.dx = -ball.dx * 1.03
+    ball.x = ball.x + player1paddle.width
+  end
+
+  if ball:collision(player2paddle) then
+    ball.dx = -ball.dx * 1.03
+    ball.x = ball.x - ball.width
+  end
+
   -- player 1
   if love.keyboard.isDown('w') then
     player1paddle.dy = -PADDLE_SPEED
