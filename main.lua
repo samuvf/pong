@@ -52,25 +52,25 @@ end
 function love.update(dt) 
   -- ball collision with paddle1
   if ball:collision(player1paddle) then
-    ball.dx = -ball.dx * 1.03             -- change direction and increases velocity
+    ball.dx = -ball.dx * 1.05             -- change direction and increases velocity
     ball.x = ball.x + player1paddle.width -- moves ball away from paddle to avoid a collision loop
 
     -- does not change y direction just its velocity
     if ball.dy < 0 then
-      ball.dy = -math.random(10,150)
+      ball.dy = -math.random(50,150)
     else
-      ball.dy = math.random(10,150)
+      ball.dy = math.random(50,150)
     end
   end
   -- ball collision with paddle2
   if ball:collision(player2paddle) then
-    ball.dx = -ball.dx * 1.03
+    ball.dx = -ball.dx * 1.05
     ball.x = ball.x - ball.width
 
     if ball.y < 0 then
-      ball.dy = -math.random(10,150)
+      ball.dy = -math.random(50,150)
     else
-      ball.dy = math.random(10,150)
+      ball.dy = math.random(50,150)
     end
   end
   -- ball collision with top and botton 
@@ -80,15 +80,27 @@ function love.update(dt)
 
   -- scores
   if ball.x < 0 then
-    scorePlayer1 = scorePlayer1 + 1
-
-    gameState = 'start'
+    scorePlayer2 = scorePlayer1 + 1
     ball:reset()
+    if scorePlayer2 == 10 then
+      scorePlayer1 = 0
+      scorePlayer2 = 0
+      gameState = 'start'
+    else
+      gameState = 'serve1'
+      ball.dx = 100
+    end
   elseif ball.x > VIRTUAL_WIDTH then
-    scorePlayer2 = scorePlayer2 + 1
-
-    gameState = 'start'
+    scorePlayer1 = scorePlayer2 + 1
     ball:reset()
+    if scorePlayer1 == 10 then
+      scorePlayer1 = 0
+      scorePlayer2 = 0
+      gameState = 'start'
+    else
+      gameState = 'serve2'
+      ball.dx = -100
+    end
   end  
   -- player 1 movement
   if love.keyboard.isDown('w') then
@@ -111,7 +123,7 @@ function love.update(dt)
   player2paddle:update(dt)
 
   if gameState == 'play' then
-    ball:update(dt)   
+    ball:update(dt)
   end
 end
 
@@ -119,7 +131,7 @@ function love.keypressed(key)
   if key == 'escape' then
     love.event.quit()
   elseif key == 'enter' or key == 'return' then
-    if gameState == 'start' then
+    if gameState == 'start' or gameState == 'serve1' or gameState == 'serve2' then
       gameState = 'play'
     else
       gameState = 'start'
@@ -137,11 +149,11 @@ function love.draw()
     love.graphics.printf(
       'Game Start State',
       0,                        -- starting x
-      VIRTUAL_HEIGHT / 5,  -- starting y
+      VIRTUAL_HEIGHT / 5,       -- starting y
       VIRTUAL_WIDTH,            -- limit
       'center'                  -- alignment
     )
-  else
+  elseif gameState == 'play' then
     love.graphics.printf(
       'Game Play State',
       0,                     
@@ -149,6 +161,10 @@ function love.draw()
       VIRTUAL_WIDTH,           
       'center'               
     )
+  elseif gameState == 'serve1' then
+    love.graphics.printf('Player 1 serves', 0, VIRTUAL_HEIGHT / 5, VIRTUAL_WIDTH, 'center')
+  elseif gameState == 'serve2' then
+    love.graphics.printf('Player 2 serves', 0, VIRTUAL_HEIGHT / 5, VIRTUAL_WIDTH, 'center')
   end
 
   love.graphics.setFont(bigFont)
@@ -162,4 +178,3 @@ function love.draw()
 
   push:finish()
 end
-
