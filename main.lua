@@ -80,23 +80,23 @@ function love.update(dt)
 
   -- scores
   if ball.x < 0 then
-    scorePlayer2 = scorePlayer1 + 1
+    scorePlayer2 = scorePlayer2 + 1
     ball:reset()
     if scorePlayer2 == 10 then
       scorePlayer1 = 0
       scorePlayer2 = 0
-      gameState = 'start'
+      gameState = 'win1'
     else
       gameState = 'serve1'
       ball.dx = 100
     end
   elseif ball.x > VIRTUAL_WIDTH then
-    scorePlayer1 = scorePlayer2 + 1
+    scorePlayer1 = scorePlayer1 + 1
     ball:reset()
     if scorePlayer1 == 10 then
       scorePlayer1 = 0
       scorePlayer2 = 0
-      gameState = 'start'
+      gameState = 'win2'
     else
       gameState = 'serve2'
       ball.dx = -100
@@ -131,7 +131,7 @@ function love.keypressed(key)
   if key == 'escape' then
     love.event.quit()
   elseif key == 'enter' or key == 'return' then
-    if gameState == 'start' or gameState == 'serve1' or gameState == 'serve2' then
+    if gameState ~= 'play' then
       gameState = 'play'
     else
       gameState = 'start'
@@ -162,9 +162,13 @@ function love.draw()
       'center'               
     )
   elseif gameState == 'serve1' then
-    love.graphics.printf('Player 1 serves', 0, VIRTUAL_HEIGHT / 5, VIRTUAL_WIDTH, 'center')
+    love.graphics.printf('Player 1 Serves', 0, VIRTUAL_HEIGHT / 5, VIRTUAL_WIDTH, 'center')
   elseif gameState == 'serve2' then
-    love.graphics.printf('Player 2 serves', 0, VIRTUAL_HEIGHT / 5, VIRTUAL_WIDTH, 'center')
+    love.graphics.printf('Player 2 Serves', 0, VIRTUAL_HEIGHT / 5, VIRTUAL_WIDTH, 'center')
+  elseif gameState == 'win1' then
+    love.graphics.printf('Player 2 Wins', 0, VIRTUAL_HEIGHT / 5, VIRTUAL_WIDTH, 'center')
+  elseif gameState == 'win2' then
+    love.graphics.printf('Player 1 Wins', 0, VIRTUAL_HEIGHT / 5, VIRTUAL_WIDTH, 'center')
   end
 
   love.graphics.setFont(bigFont)
