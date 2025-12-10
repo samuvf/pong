@@ -21,7 +21,9 @@ function love.load()
   smallFont = love.graphics.newFont('font.ttf', 16) -- better font for 2d game
   bigFont = love.graphics.newFont('font.ttf', 32) 
 
-
+  paddleHit = love.audio.newSource('paddleHit.wav', 'static')
+  top_bottomHit = love.audio.newSource('top&bottomHit.wav', 'static')
+  scoreAudio = love.audio.newSource('score.wav', 'static')
 
   math.randomseed(os.time())
 
@@ -53,6 +55,7 @@ end
 function love.update(dt) 
   -- ball collision with paddle1
   if ball:collision(player1paddle) then
+    love.audio.play(paddleHit)
     ball.dx = -ball.dx * 1.05             -- change direction and increases velocity
     ball.x = ball.x + player1paddle.width -- moves ball away from paddle to avoid a collision loop
 
@@ -65,6 +68,7 @@ function love.update(dt)
   end
   -- ball collision with paddle2
   if ball:collision(player2paddle) then
+    love.audio.play(paddleHit)
     ball.dx = -ball.dx * 1.05
     ball.x = ball.x - ball.width
 
@@ -76,11 +80,13 @@ function love.update(dt)
   end
   -- ball collision with top and botton 
   if ball.y <= ball.height or ball.y >= VIRTUAL_HEIGHT - ball.height then 
+    love.audio.play(top_bottomHit)
     ball.dy = -ball.dy -- change direction
   end
 
   -- scores
   if ball.x < 0 then
+    love.audio.play(scoreAudio)
     scorePlayer2 = scorePlayer2 + 1
     ball:reset()
     if scorePlayer2 == 10 then
@@ -92,6 +98,7 @@ function love.update(dt)
       ball.dx = 100
     end
   elseif ball.x > VIRTUAL_WIDTH then
+    love.audio.play(scoreAudio)
     scorePlayer1 = scorePlayer1 + 1
     ball:reset()
     if scorePlayer1 == 10 then
