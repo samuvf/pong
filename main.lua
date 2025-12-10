@@ -19,8 +19,9 @@ function love.load()
   love.graphics.setDefaultFilter('nearest', 'nearest') -- filter for retro game
 
   smallFont = love.graphics.newFont('font.ttf', 16) -- better font for 2d game
-
   bigFont = love.graphics.newFont('font.ttf', 32) 
+
+
 
   math.randomseed(os.time())
 
@@ -67,7 +68,7 @@ function love.update(dt)
     ball.dx = -ball.dx * 1.05
     ball.x = ball.x - ball.width
 
-    if ball.y < 0 then
+    if ball.dy < 0 then
       ball.dy = -math.random(50,150)
     else
       ball.dy = math.random(50,150)
@@ -145,6 +146,13 @@ function love.draw()
   push:start()
   
   love.graphics.setFont(smallFont)
+
+  love.graphics.clear(50/255, 50/255, 50/255)
+
+  love.graphics.setColor(0, 1, 0)
+  love.graphics.print("FPS:" .. tostring(love.timer.getFPS()), 10, 10)
+  
+  love.graphics.setColor(1, 1, 1)
   if gameState == 'start' then
     love.graphics.printf(
       'Game Start State',
