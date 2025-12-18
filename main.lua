@@ -65,12 +65,12 @@ end
 
 function love.update(dt) 
   if gameState == 'serve' then
+    ball.dy = math.random(-50, 50)
     if servingPlayer == 1 then
       ball.dx = math.random(40, 200)
-    elseif servingPlayer == 2 then
+    else
       ball.dx = -math.random(40, 200)
     end
-    ball.dy = math.random(-50, 50)
   end
 
   -- player 2 scores
@@ -142,13 +142,14 @@ function love.update(dt)
   end
 
   -- player 1 movement
-  if love.keyboard.isDown('w') then
+  if player1paddle.y + player1paddle.height / 2 < ball.y then
+    player1paddle.dy = PADDLE_SPEED
+  elseif player1paddle.y + player1paddle.height / 2 > ball.y + ball.height then
     player1paddle.dy = -PADDLE_SPEED
-  elseif love.keyboard.isDown('s') then
-    player1paddle.dy = PADDLE_SPEED 
   else
-    player1paddle.dy = 0 -- if no keyboard pressed paddle stays in its place
+    player1paddle.dy = 0
   end
+
   -- player 2 movement
   if love.keyboard.isDown('up') then
     player2paddle.dy = -PADDLE_SPEED 
